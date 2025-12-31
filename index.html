@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>お年玉クイズ</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin-top: 60px;
+}
+#status {
+  font-size: 18px;
+  color: gray;
+}
+.question {
+  font-size: 24px;
+  margin-top: 30px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎍 お年玉クイズ 🎍</h1>
+<div id="status">待機中…</div>
+<div class="question" id="question"></div>
+
+<script>
+const questions = {
+  1: "今年の干支は何？",
+  2: "今年はうるう年？",
+  3: "今年の元日は何曜日？"
+};
+
+let lastQ = -1;
+
+setInterval(async () => {
+  const res = await fetch("question.txt?nocache=" + Date.now());
+  const text = await res.text();
+  const q = Number(text.trim());
+
+  if (q !== lastQ) {
+    lastQ = q;
+    if (q === 0) {
+      document.getElementById("status").innerText = "待機中…";
+      document.getElementById("question").innerText = "";
+    } else {
+      document.getElementById("status").innerText = `第${q}問`;
+      document.getElementById("question").innerText = questions[q];
+    }
+  }
+}, 2000);
+</script>
+
+</body>
+</html>
